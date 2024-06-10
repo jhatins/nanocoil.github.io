@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guessing Game</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        #game {
+            text-align: center;
+        }
+
+        #guess {
+            display: inline-block;
+            margin: 20px;
+            padding: 10px 20px;
+            font-size: 2em;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        #result {
+            display: inline-block;
+            margin: 20px;
+            padding: 10px 20px;
+            font-size: 1.5em;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div id="game">
+        <input type="number" id="guess" placeholder="Enter a number between 1 and 100">
+        <button id="check">Check</button>
+        <div id="result"></div>
+    </div>
+    <script>
+        const guess = document.getElementById('guess');
+        const check = document.getElementById('check');
+        const result = document.getElementById('result');
+        const secretNumber = Math.floor(Math.random() * 100) + 1;
+
+        check.addEventListener('click', () => {
+            const guessValue = parseInt(guess.value);
+            if (isNaN(guessValue) || guessValue < 1 || guessValue > 100) {
+                result.textContent = 'Please enter a valid number between 1 and 100.';
+                return;
+            }
+            if (guessValue < secretNumber) {
+                result.textContent = 'Too low!';
+            } else if (guessValue > secretNumber) {
+                result.textContent = 'Too high!';
+            } else {
+                result.textContent = 'Congratulations! You guessed the number!';
+            }
+        });
+    </script>
+</body>
+</html>

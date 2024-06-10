@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>What Did You Learn Today?</title>
+  </head>
+  <body>
+    <h1>What Did You Learn Today?</h1>
+    <form id="learning-form">
+      <label for="learning-input">Enter what you learned today:</label>
+      <input type="text" id="learning-input" name="learning-input" required>
+      <button type="submit">Submit</button>
+    </form>
+    <button id="view-learnings-button">View Previous Learnings</button>
+    <div id="learnings-container"></div>
+    <script>
+      const form = document.getElementById('learning-form');
+      const learningInput = document.getElementById('learning-input');
+      const viewLearningsButton = document.getElementById('view-learnings-button');
+      const learningsContainer = document.getElementById('learnings-container');
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const learning = learningInput.value;
+        saveLearning(learning);
+        learningInput.value = '';
+        viewLearningsButton.style.display = 'block';
+        loadLearnings();
+      });
+
+      viewLearningsButton.addEventListener('click', () => {
+        loadLearnings();
+      });
+
+      function saveLearning(learning) {
+        const data = `${new Date().toLocaleDateString()}: ${learning}\n`;
+        const file = 'learnings.txt';
+        const blob = new Blob([data], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = file;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      function loadLearnings() {
+        const learnings = {};
+        const file = 'learnings.txt';
+        const rawFile = new XMLHttpRequest();
+        rawFile.open('GET', file, false);
+        rawFile.onreadystatechange = function () {
+          if (rawFile.readyState === 4) {
+            if (rawFile.status === 200 || rawFile.status === 0) {
+              const lines = rawFile.responseText.split('\n');
+              lines.forEach((line) => {
+                if (line) {
+                  const [date, text] = line.split(': ');
+                  if (!learnings[date]) {
+                    learnings[date] = [];
+                  }
+                  learnings[date].push(text);
+                }
+              });
+              displayLearnings(learnings);
+            }
+          }
+        };
+        rawFile.send(null);
+      }
+
+      function displayLearnings(learnings) {
+        let output = '';
+        for (const date in learnings) {
+          output += `<h2>${date}</h2>`;
+          learnings[date].forEach((learning) => {
+            output += `<p>${learning}</p>`;
+          });
+        }
+        learningsContainer.innerHTML = output;
+      }
+    </script>
+  </body>
+</html>
