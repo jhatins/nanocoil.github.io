@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+   <body style="background-color:#EAFAF1">
+      Enter Password:
+      <input type='text' id="password">
+      <button onclick="checkPassword()">Submit</button>
+      <script>
+         function checkPassword() {
+            const password = document.getElementById("password").value;
+            const passcode = "12345"; // replace with your desired password
+            if (password === passcode) {
+               window.location.href = "dailylearnings.html"; // redirect to index.html if password is correct
+            } else {
+               alert("Incorrect Passcode");
+               location.reload();
+            }
+         }
+      </script>
+   </body>
+</html>
